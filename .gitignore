@@ -1,0 +1,5 @@
+build/
+.cmake/
+*.o
+*.exe
+/DS_store
