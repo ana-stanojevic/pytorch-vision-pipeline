@@ -3,6 +3,7 @@
 ![CI](https://github.com/<user>/pytorch-vision-pipeline/actions/workflows/python-ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 Clean, reproducible CIFAR-10 training + inference pipeline in **PyTorch**.  
 Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, inference, and CI.  
