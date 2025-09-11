@@ -21,18 +21,6 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 
 ---
 
-## ❓ Why this project  
-This repository was built as a **learning-friendly, reproducible template** for computer vision projects.  
-The idea is to show how to go from *data → model → training → evaluation → inference → CI* in a clean, modular way.  
-
-Use cases:  
-- 🚀 Quick start for newcomers to PyTorch vision projects  
-- 📚 Teaching / workshops (end-to-end workflow demo)  
-- 🧪 Baseline reference for experimenting with CIFAR-10  
-- ⚙️ Template for scaling to more complex datasets or architectures  
-
----
-
 ## 📂 Project structure  
 ```
 pytorch-vision-pipeline/
@@ -93,6 +81,20 @@ pytest -v
 
 ---
 
+## ❓ Why this project  
+This repository was built as a **learning-friendly, reproducible template** for computer vision projects.  
+The idea is to show how to go from *data → model → training → evaluation → inference → CI* in a clean, modular way.  
+
+Use cases:  
+- 🚀 Quick start for newcomers to PyTorch vision projects  
+- 📚 Teaching / workshops (end-to-end workflow demo)  
+- 🧪 Baseline reference for experimenting with CIFAR-10  
+- ⚙️ Template for scaling to more complex datasets or architectures  
+
+
+---
+
+
 ## ⚙️ Tech stack  
 - Python 3.11  
 - PyTorch & TorchVision  
@@ -112,8 +114,10 @@ pytest==8.3.2
 
 ---
 
-## 📚 Author  
-Ana Stanojevic — [Google Scholar](https://scholar.google.com/citations?user=3DNfrZYAAAAJ) • [CV](https://bit.ly/ana-cv)  
+## 👩‍💻 Author
+
+**Ana Stanojevic**  
+[Scholar ↗](https://bit.ly/ana-stanojevic) • [CV ↗](https://bit.ly/ana-stanojevic-cv) 
 
 ---
 
