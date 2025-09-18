@@ -1,5 +1,6 @@
-build/
-.cmake/
-*.o
-*.exe
-/DS_store
+.venv/
+pycache/
+.vscode/
+data/
+*.pt
+.DS_store
