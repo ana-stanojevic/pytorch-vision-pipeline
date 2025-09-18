@@ -1,6 +1,8 @@
 .venv/
-pycache/
 .vscode/
+__pycache__/
+*.pyc
+*.onnx
 data/
-*.pt
+outputs/
 .DS_store

@@ -25,20 +25,27 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 ```
 pytorch-vision-pipeline/
 ├── src/
-│   ├── model.py          # CNN model definition
+│   ├── models.py                  
 │   ├── train.py          # training & evaluation loop
 │   ├── infer.py          # inference script
+│   └── data.py          # helper functions
 │   └── utils.py          # helper functions
 ├── tests/
 │   ├── test_smoke.py     # imports & basic sanity checks
-│   └── test_model.py     # unit tests for model
-├── requirements.txt      # dependencies
+│   └── test_model.py     # unit tests for modeles
+├─ data/
+├─ configs/
+│  ├─ cifar10_vit_tiny.yaml
+│  └─ cifar10_mobilenet.yaml
+├─ outputs/
+│  ├─ checkpoints/
+│  └─ logs/
 ├── .github/workflows/
 │   └── python-ci.yml     # GitHub Actions CI pipeline
+├── requirements.txt      # dependencies
 ├── .gitignore
 └── README.md
 ```
-
 ---
 
 ## 🚀 Quick start  
@@ -51,13 +58,21 @@ cd pytorch-vision-pipeline
 
 2. **Create virtual env & install dependencies**  
 ```bash
-python -m venv .venv && source .venv/bin/activate  
-pip install -r requirements.txt  
+python -m venv .venv && source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt 
 ```
 
-3. **Train model**  
+3. **Train models**  
 ```bash
-python src/train.py --epochs 2 --lr 0.001 --bs 128 --device cpu  
+# ViT-Tiny (MPS, AMP, benchmark)
+python train.py --config configs/cifar10_vit_tiny.yaml --channels_last --benchmark
+
+# MobileNetV3-Small
+python train.py --config configs/cifar10_mobilenet.yaml --channels_last --benchmark
+
+# ONNX export primer
+python train.py --config configs/cifar10_vit_tiny.yaml --export_onnx vit_tiny_cifar10.onnx
 ```
 
 4. **Run inference**  

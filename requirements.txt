@@ -1,6 +1,16 @@
 torch
 torchvision
 torchaudio
-numpy
+timm
 tqdm
+onnx
+onnxruntime
+numpy
+pillow
+tensorboard
+pyyaml
+#dev
+black
+ruff
 pytest
+ipykernel

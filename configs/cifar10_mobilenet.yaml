@@ -1,0 +1,15 @@
+
+# CIFAR-10 + MobileNetV3-Small (MPS-ready)
+model: mobilenetv3_small
+dataset: cifar10
+data_dir: ./data
+epochs: 5
+batch_size: 128
+lr: 0.0005
+weight_decay: 0.05
+workers: 4
+channels_last: true
+no_pretrained: false
+grad_clip: 0.0
+benchmark: true
+export_onnx: ""
