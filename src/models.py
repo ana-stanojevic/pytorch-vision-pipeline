@@ -1,4 +1,3 @@
-import torch.nn as nn
 import timm
 
 def create_model(model_name: str, num_classes: int, pretrained: bool = True):
