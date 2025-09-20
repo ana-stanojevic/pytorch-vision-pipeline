@@ -2,10 +2,21 @@
 import time
 from contextlib import nullcontext
 from typing import Dict
+import yaml
 
 import torch
 import torch.nn as nn
 
+import numpy as np
+import onnx
+import onnxruntime as ort
+
+def load_config(path: str):
+    if not path:
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+    
 def pick_device() -> str:
     if torch.backends.mps.is_available():
         return "mps"
@@ -103,3 +114,64 @@ def export_onnx(model, onnx_path: str, num_classes: int, img_size: int=224):
                       input_names=["input"], output_names=["logits"],
                       dynamic_axes=dynamic_axes, opset_version=17)
     print(f"[ONNX] Exported to {onnx_path}")
+
+
+def _read_model_io(onnx_path: str):
+    onnx_model = onnx.load(onnx_path)
+    onnx.checker.check_model(onnx_model)
+
+    sess = ort.InferenceSession(onnx_path, providers=["CPUExecutionProvider"])
+    in_t = sess.get_inputs()[0]
+    out_t = sess.get_outputs()[0]
+
+    in_shape = [d if isinstance(d, int) else 1 for d in in_t.shape]
+    if len(in_shape) != 4:
+        raise RuntimeError(f"Expected 4D input (NCHW), got shape={in_shape}")
+    return sess, in_t.name, tuple(in_shape), out_t.name
+
+
+@torch.no_grad()
+def evaluate_onnx(sess: ort.InferenceSession, input_name: str, output_name: str, loader):
+    correct, total = 0, 0
+    for imgs, labels in loader:
+
+        x = imgs.detach().cpu().numpy().astype(np.float32)
+        y = labels.detach().cpu().numpy().astype(np.int64)
+
+        logits = sess.run([output_name], {input_name: x})[0]  # [N, num_classes]
+        pred = logits.argmax(axis=1)
+        correct += (pred == y).sum()
+        total += y.size
+    return correct / max(total, 1)
+
+
+def benchmark_onnx(sess: ort.InferenceSession, input_name: str, loader, warmup=5, measure=20):
+    it = iter(loader)
+    # warmup
+    for _ in range(warmup):
+        try:
+            imgs, _ = next(it)
+        except StopIteration:
+            it = iter(loader); imgs, _ = next(it)
+        x = imgs.detach().cpu().numpy().astype(np.float32)
+        _ = sess.run(None, {input_name: x})
+
+    # measure
+    times = []
+    for _ in range(measure):
+        try:
+            imgs, _ = next(it)
+        except StopIteration:
+            it = iter(loader); imgs, _ = next(it)
+        x = imgs.detach().cpu().numpy().astype(np.float32)
+        t0 = time.perf_counter()
+        _ = sess.run(None, {input_name: x})
+        t1 = time.perf_counter()
+        times.append(t1 - t0)
+
+    if not times:
+        return {"latency_ms": None, "images_per_s": None, "batch": None}
+    avg = sum(times) / len(times)
+    bsz = x.shape[0]
+    return {"latency_ms": avg * 1000.0, "images_per_s": bsz / avg, "batch": bsz}
+

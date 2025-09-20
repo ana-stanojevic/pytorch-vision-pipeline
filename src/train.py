@@ -1,7 +1,4 @@
-
-import argparse
 import time
-import yaml
 
 import torch
 import torch.nn as nn
@@ -10,21 +7,12 @@ import torch.optim as optim
 from src.data import build_dataloaders, get_num_classes
 from src.models import create_model
 from src.utils import (
-    pick_device, pick_amp_dtype, evaluate,
+    load_config, pick_device, pick_amp_dtype, evaluate,
     train_one_epoch, benchmark_latency, export_onnx
 )
 
-def load_config(path: str):
-    if not path:
-        return {}
-    with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
-
-def main():
-    p = argparse.ArgumentParser(description="Modern Vision Pipeline (MPS-ready)")
-    p.add_argument("--config", type=str, default="", help="YAML config path")
-    args = p.parse_args()
-    cfg = load_config(args.config)
+def train(config):
+    cfg = load_config(config)
     model_name   = cfg.get("model", "vit_tiny")
     dataset      = cfg.get("dataset", "cifar10")
     data_dir     = cfg.get("data_dir", "./data")
@@ -93,6 +81,6 @@ def main():
 
     if onnx_out:
         export_onnx(model, onnx_out, num_classes=num_classes, img_size=img_size)
+        print(f"[ONNX] Model exported to: {onnx_out}")
 
-if __name__ == "__main__":
-    main()
+
