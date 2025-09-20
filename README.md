@@ -24,6 +24,7 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 ## 📂 Project structure  
 ```
 pytorch-vision-pipeline/
+├── main.py
 ├── src/
 │   ├── models.py                  
 │   ├── train.py          # training & evaluation loop
@@ -39,7 +40,6 @@ pytorch-vision-pipeline/
 │  └─ cifar10_mobilenet.yaml
 ├─ outputs/
 │  ├─ checkpoints/
-│  └─ logs/
 ├── .github/workflows/
 │   └── python-ci.yml     # GitHub Actions CI pipeline
 ├── requirements.txt      # dependencies
