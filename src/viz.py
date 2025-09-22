@@ -17,31 +17,46 @@ def save_cifar10_grid(
 ):
 
     model.eval()
-    it = iter(val_loader)
-    imgs, labels = next(it)  
+    model = model.to(device) 
     classes = cifar10_classes_from_dataset(val_loader.dataset)
 
-    n = min(max_images, imgs.shape[0])
-    imgs = imgs[:n].to(device)
-    labels = labels[:n].to(device)
+    TARGET_TOTAL = 10
+    TARGET_WRONG = 5
+    TARGET_RIGHT = TARGET_TOTAL - TARGET_WRONG
+    wrong, right = [], []  
 
-    model = model.to("cpu")
-    logits = model(imgs)
-    probs = F.softmax(logits, dim=1)
-    preds = probs.argmax(dim=1)
+    for imgs, labels in val_loader:
+        imgs = imgs.to(device)
+        labels = labels.to(device)
 
-    imgs_cpu = imgs.cpu()
-    labels_cpu = labels.cpu()
-    preds_cpu = preds.cpu()
-    probs_cpu = probs.cpu()
+        logits = model(imgs)
+        probs = F.softmax(logits, dim=1)
+        preds = probs.argmax(dim=1)
+
+        for i in range(imgs.size(0)):
+            true_id = int(labels[i].item())
+            pred_id = int(preds[i].item())
+            conf = float(probs[i, pred_id].item())
+            sample = (imgs[i].detach().cpu(), true_id, pred_id, conf)
+            if pred_id != true_id and len(wrong) < TARGET_WRONG:
+                wrong.append(sample)
+            elif pred_id == true_id and len(right) < TARGET_RIGHT:
+                right.append(sample)
+
+            if len(wrong) + len(right) >= TARGET_TOTAL:
+                break
+        if len(wrong) + len(right) >= TARGET_TOTAL:
+            break
+
+    samples = wrong[:TARGET_WRONG] + right[:TARGET_RIGHT]
+    n = len(samples)
 
     mean = torch.tensor([0.485, 0.456, 0.406]).view(3,1,1)
     std  = torch.tensor([0.229, 0.224, 0.225]).view(3,1,1)
-    imgs_show = torch.clamp(imgs_cpu * std + mean, 0, 1)
 
     rows = 2
     cols = (n + rows - 1) // rows
-    fig, axes = plt.subplots(rows, cols, figsize=(cols*3.2, rows*3.2))
+    fig, axes = plt.subplots(rows, cols, figsize=(cols*4, rows*4), dpi=300)
     if rows == 1:
         axes = [axes]
     axes = axes.flatten()
@@ -51,29 +66,35 @@ def save_cifar10_grid(
         ax.axis("off")
         if i >= n:
             continue
-        img = imgs_show[i].permute(1,2,0).numpy()  # CHW -> HWC
-        true_id = int(labels_cpu[i].item())
-        pred_id = int(preds_cpu[i].item())
-        correct = (true_id == pred_id)
-        conf = float(probs_cpu[i, pred_id].item())
 
-        ax.imshow(img)
+        img_t, true_id, pred_id, conf = samples[i]
+        img_show = torch.clamp(img_t * std + mean, 0, 1)
+        img_show = F.interpolate(
+                img_show.unsqueeze(0), scale_factor=2, mode="bilinear", align_corners=False
+            ).squeeze(0)
+        img_show = img_show.permute(1, 2, 0).numpy()
+        correct = (true_id == pred_id)
+        ax.imshow(img_show, interpolation='bicubic')
+
         title = f"pred: {classes[pred_id]} ({conf:.2f})\ntrue: {classes[true_id]}"
         ax.set_title(
             title,
             color=("green" if correct else "red"),
-            fontsize=9,
+            fontsize=14,
+            fontweight='bold',
+            pad=6,
+            backgroundcolor=(1,1,1,0.6)
         )
         for spine in ax.spines.values():
             spine.set_edgecolor("green" if correct else "red")
-            spine.set_linewidth(2.0)
+            spine.set_linewidth(3.0)
 
-    fig.suptitle("CIFAR-10 — predictions (green=correct, red=wrong)", fontsize=12)
-    fig.tight_layout()
+    fig.suptitle("CIFAR-10 — predictions (green=correct, red=wrong)", fontsize=16)
+    fig.tight_layout(rect=[0, 0, 1, 0.97])
 
     import os
     os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
-    fig.savefig(save_path, dpi=150, bbox_inches="tight")
+    fig.savefig(save_path, dpi=300, bbox_inches="tight")
     print(f"[Saved] {save_path}")
 
     if writer is not None:

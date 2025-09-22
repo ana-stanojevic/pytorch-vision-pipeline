@@ -72,12 +72,12 @@ def train(config, writer):
         dt = time.time() - t0
         print(f"[Epoch {ep:02d}] loss={loss_ep:.4f} | acc={acc*100:.2f}% | time={dt:.1f}s | lr={scheduler.get_last_lr()[0]:.2e}")
 
-    # if do_bench:
-    #     bench = benchmark_latency(model, val_loader, device, amp_dtype)
-    #     if bench["latency_ms"] is not None:
-    #         print(f"[Bench] latency={bench['latency_ms']:.2f} ms | img/s={bench['images_per_s']:.2f} @batch={bench['batch']}")
-    #         writer.add_scalar(f"{model_name}-latency/ms", bench["latency_ms"], ep)
-    #         writer.add_scalar(f"{model_name}-throughput/img_s", bench["images_per_s"], ep)
+    if do_bench:
+        bench = benchmark_latency(model, val_loader, device, amp_dtype)
+        if bench["latency_ms"] is not None:
+            print(f"[Bench] latency={bench['latency_ms']:.2f} ms | img/s={bench['images_per_s']:.2f} @batch={bench['batch']}")
+            writer.add_scalar(f"{model_name}-latency/ms", bench["latency_ms"], ep)
+            writer.add_scalar(f"{model_name}-throughput/img_s", bench["images_per_s"], ep)
 
     save_cifar10_grid(
         model,
