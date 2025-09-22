@@ -4,8 +4,9 @@ from src.utils import (
     load_config, _read_model_io, evaluate_onnx, benchmark_onnx
 )
 
-def infer(config):
+def infer(config, writer):
     cfg = load_config(config)
+    model_name   = cfg.get("model", "vit_tiny")
     dataset      = cfg.get("dataset", "cifar10")
     data_dir     = cfg.get("data_dir", "./data")
     batch_size   = int(cfg.get("batch_size", 128))
@@ -29,13 +30,13 @@ def infer(config):
         img_size=img_size,
     )
 
-    # Evaluacija
     acc = evaluate_onnx(sess, input_name, output_name, val_loader)
+    writer.add_scalar(f"{model_name}-onnx-acc/val", acc, 0)
     print(f"[ONNX Eval] CIFAR-10 accuracy: {acc*100:.2f}% (img_size={img_size})")
 
-    # Benchmark (opciono)
     if do_bench:
         bench = benchmark_onnx(sess, input_name, val_loader, warmup=5, measure=20)
         if bench["latency_ms"] is not None:
             print(f"[ONNX Bench] latency={bench['latency_ms']:.2f} ms | img/s={bench['images_per_s']:.2f} @batch={bench['batch']}")
-
+            writer.add_scalar(f"{model_name}-onnx-latency/ms", bench["latency_ms"], 0)
+            writer.add_scalar(f"{model_name}-onnx-throughput/img_s", bench["images_per_s"], 0)

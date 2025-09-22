@@ -14,7 +14,7 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 - CIFAR-10 dataset with train/test loaders  
 - MobileNet and Vision Transformer (ViT) models in PyTorch  
 - Training & evaluation loops and inference
-- Metrics & visuals: per-epoch loss/acc, latency, and image grids (predicted vs. true)
+- Visualizations: TensorBoard metrics and image grids
 - Reproducible environment (`requirements.txt`)  
 - Unit tests with `pytest`  
 - Continuous Integration via GitHub Actions  
@@ -29,8 +29,9 @@ pytorch-vision-pipeline/
 │   └── models.py                  
 │   └── train.py          # training & evaluation loop
 │   └── infer.py          # inference script
-│   └── data.py          # helper functions
+│   └── data.py          # data functions
 │   └── utils.py          # helper functions
+│   └── viz.py          # vizualization functions
 ├── tests/
 │   └── test_model.py     # unit tests for models
 ├─ data/
@@ -40,6 +41,8 @@ pytorch-vision-pipeline/
 ├─ outputs/
 │  └── visuals
 │  └── models 
+│  └── logs 
+│  └── viz
 ├── .github/workflows/
 │   └── python-ci.yml     # GitHub Actions CI pipeline
 ├── requirements.txt      # dependencies
@@ -76,6 +79,12 @@ python main.py --config configs/cifar10_mobilenet.yaml
 ```bash
 python src/main.py --config configs/cifar10_vit_tiny.yaml --no_train 
 python main.py --config configs/cifar10_mobilenet.yaml --no-train
+```
+
+5. **Training & latency at a glance (PyTorch MPS vs ONNX CPU)**
+```bash
+ #Launch TensorBoard to view loss, val accuracy, and latency comparisons:
+tensorboard --logdir outputs/logs
 ```
 
 ---

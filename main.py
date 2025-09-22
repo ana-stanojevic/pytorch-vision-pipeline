@@ -3,6 +3,8 @@ import torch
 from src.train import train
 from src.infer import infer
 import os
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter(log_dir="outputs/logs")
 
 def set_seed(seed=42):
     random.seed(seed)
@@ -20,9 +22,9 @@ def main():
     print("Current working directory:", os.getcwd())
     # Train model and save it as .onnx
     if not args.no_train:
-        train(args.config)
+        train(args.config, writer)
     # Load .onnx model and evaulate it
-    infer(args.config)
+    infer(args.config, writer)
 
 if __name__ == "__main__":
     import multiprocessing as mp
