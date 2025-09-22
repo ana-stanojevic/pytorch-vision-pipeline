@@ -10,13 +10,12 @@ def infer(config):
     data_dir     = cfg.get("data_dir", "./data")
     batch_size   = int(cfg.get("batch_size", 128))
     workers      = int(cfg.get("workers", 4))
-    channels_last = bool(cfg.get("channels_last", False))
     do_bench     = bool(cfg.get("benchmark", False))
     onnx_out     = cfg.get("export_onnx", "")
     if onnx_out is None:
         onnx_out = ""
+    onnx_out = Path(onnx_out)    
     assert onnx_out.exists(), f"ONNX model not found: {onnx_out}"
-    onnx_out = Path(onnx_out)
     sess, input_name, (N, C, H, W), output_name = _read_model_io(str(onnx_out))
     img_size = H
     assert N == 1, f"Expected dynamic batch size, got N={N}"

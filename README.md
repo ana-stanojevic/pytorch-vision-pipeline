@@ -12,9 +12,9 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 
 ## 📦 Features  
 - CIFAR-10 dataset with train/test loaders  
-- Simple CNN model in PyTorch  
-- Training & evaluation loops with progress bar  
-- Inference script for single images  
+- MobileNet and Vision Transformer (ViT) models in PyTorch  
+- Training & evaluation loops and inference
+- Metrics & visuals: per-epoch loss/acc, latency, and image grids (predicted vs. true)
 - Reproducible environment (`requirements.txt`)  
 - Unit tests with `pytest`  
 - Continuous Integration via GitHub Actions  
@@ -26,20 +26,20 @@ Demonstrates end-to-end ML workflow: dataloaders, model, training, evaluation, i
 pytorch-vision-pipeline/
 ├── main.py
 ├── src/
-│   ├── models.py                  
-│   ├── train.py          # training & evaluation loop
-│   ├── infer.py          # inference script
+│   └── models.py                  
+│   └── train.py          # training & evaluation loop
+│   └── infer.py          # inference script
 │   └── data.py          # helper functions
 │   └── utils.py          # helper functions
 ├── tests/
-│   ├── test_smoke.py     # imports & basic sanity checks
-│   └── test_model.py     # unit tests for modeles
+│   └── test_model.py     # unit tests for models
 ├─ data/
 ├─ configs/
-│  ├─ cifar10_vit_tiny.yaml
-│  └─ cifar10_mobilenet.yaml
+│  └── cifar10_vit_tiny.yaml
+│  └── cifar10_mobilenet.yaml
 ├─ outputs/
-│  ├─ checkpoints/
+│  └── visuals
+│  └── models 
 ├── .github/workflows/
 │   └── python-ci.yml     # GitHub Actions CI pipeline
 ├── requirements.txt      # dependencies
@@ -63,21 +63,19 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt 
 ```
 
-3. **Train models**  
+3. **Train and inference models**  
 ```bash
 # ViT-Tiny (MPS, AMP, benchmark)
-python train.py --config configs/cifar10_vit_tiny.yaml --channels_last --benchmark
+python main.py --config configs/cifar10_vit_tiny.yaml
 
 # MobileNetV3-Small
-python train.py --config configs/cifar10_mobilenet.yaml --channels_last --benchmark
-
-# ONNX export primer
-python train.py --config configs/cifar10_vit_tiny.yaml --export_onnx vit_tiny_cifar10.onnx
+python main.py --config configs/cifar10_mobilenet.yaml
 ```
 
-4. **Run inference**  
+4. **Run inference on the existing models**  
 ```bash
-python src/infer.py --image path/to/image.png  
+python src/main.py --config configs/cifar10_vit_tiny.yaml --no_train 
+python main.py --config configs/cifar10_mobilenet.yaml --no-train
 ```
 
 ---

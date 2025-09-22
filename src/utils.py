@@ -19,8 +19,10 @@ def load_config(path: str):
     
 def pick_device() -> str:
     if torch.backends.mps.is_available():
+        print ("Using MPS device")
         return "mps"
     else:
+        print ("Using CPU device")
         return "cpu"
 
 def pick_amp_dtype(device: str):
@@ -30,15 +32,13 @@ def pick_amp_dtype(device: str):
         return torch.float32
 
 @torch.no_grad()
-def evaluate(model, loader, device: str, amp_dtype, channels_last: bool):
+def evaluate(model, loader, device: str, amp_dtype):
     model.eval()
     correct = 0
     total = 0
     cast_ctx = (torch.autocast(device_type=device, dtype=amp_dtype)
                 if device in ("mps") else nullcontext())
     for x, y in loader:
-        if channels_last:
-            x = x.to(memory_format=torch.channels_last)
         x = x.to(device)
         y = y.to(device)
         with cast_ctx:
@@ -48,15 +48,13 @@ def evaluate(model, loader, device: str, amp_dtype, channels_last: bool):
         total += y.numel()
     return correct / max(total, 1)
 
-def train_one_epoch(model, loader, criterion, optimizer, device: str, amp_dtype, channels_last: bool, grad_clip: float=0.0):
+def train_one_epoch(model, loader, criterion, optimizer, device: str, amp_dtype, grad_clip: float=0.0):
     model.train()
     running_loss = 0.0
     steps = 0
     cast_ctx = (torch.autocast(device_type=device, dtype=amp_dtype)
                 if device in ("cuda","mps") else nullcontext())
     for x, y in loader:
-        if channels_last:
-            x = x.to(memory_format=torch.channels_last)
         x = x.to(device)
         y = y.to(device)
         optimizer.zero_grad(set_to_none=True)

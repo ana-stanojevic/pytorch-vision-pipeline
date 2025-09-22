@@ -1,6 +1,5 @@
 import time
 
-import torch
 import torch.nn as nn
 import torch.optim as optim
 
@@ -21,7 +20,6 @@ def train(config):
     lr           = float(cfg.get("lr", 5e-4))
     weight_decay = float(cfg.get("weight_decay", 0.05))
     workers      = int(cfg.get("workers", 4))
-    channels_last = bool(cfg.get("channels_last", False))
     no_pretrained = bool(cfg.get("no_pretrained", False))
     grad_clip    = float(cfg.get("grad_clip", 0.0))
     do_bench     = bool(cfg.get("benchmark", False))
@@ -47,14 +45,12 @@ def train(config):
     )
 
     model = model.to(device)
-    if channels_last:
-        model = model.to(memory_format=torch.channels_last)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
 
-    acc0 = evaluate(model, val_loader, device, amp_dtype, channels_last=channels_last)
+    acc0 = evaluate(model, val_loader, device, amp_dtype)
     print(f"[Eval] Pre-train accuracy: {acc0*100:.2f}%")
 
     if do_bench:
@@ -66,11 +62,9 @@ def train(config):
         t0 = time.time()
         loss_ep = train_one_epoch(
             model, train_loader, criterion, optimizer,
-            device, amp_dtype, channels_last=channels_last,
-            grad_clip=grad_clip
-        )
+            device, amp_dtype, grad_clip=grad_clip)
         scheduler.step()
-        acc = evaluate(model, val_loader, device, amp_dtype, channels_last=channels_last)
+        acc = evaluate(model, val_loader, device, amp_dtype)
         dt = time.time() - t0
         print(f"[Epoch {ep:02d}] loss={loss_ep:.4f} | acc={acc*100:.2f}% | time={dt:.1f}s | lr={scheduler.get_last_lr()[0]:.2e}")
 

@@ -8,8 +8,7 @@ batch_size: 128
 lr: 0.0005
 weight_decay: 0.05
 workers: 4
-channels_last: true
 no_pretrained: false
 grad_clip: 0.0
 benchmark: true
-export_onnx: ""
+export_onnx: "outputs/models/vit_tiny_cifar10.onnx"
