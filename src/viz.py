@@ -56,7 +56,7 @@ def save_cifar10_grid(
 
     rows = 2
     cols = (n + rows - 1) // rows
-    fig, axes = plt.subplots(rows, cols, figsize=(cols*4, rows*4), dpi=300)
+    fig, axes = plt.subplots(rows, cols, figsize=(cols*3.2, rows*3.2))
     if rows == 1:
         axes = [axes]
     axes = axes.flatten()
@@ -68,13 +68,9 @@ def save_cifar10_grid(
             continue
 
         img_t, true_id, pred_id, conf = samples[i]
-        img_show = torch.clamp(img_t * std + mean, 0, 1)
-        img_show = F.interpolate(
-                img_show.unsqueeze(0), scale_factor=2, mode="bilinear", align_corners=False
-            ).squeeze(0)
-        img_show = img_show.permute(1, 2, 0).numpy()
+        img_show = torch.clamp(img_t * std + mean, 0, 1).permute(1, 2, 0).numpy()
         correct = (true_id == pred_id)
-        ax.imshow(img_show, interpolation='bicubic')
+        ax.imshow(img_show)
 
         title = f"pred: {classes[pred_id]} ({conf:.2f})\ntrue: {classes[true_id]}"
         ax.set_title(
@@ -82,15 +78,13 @@ def save_cifar10_grid(
             color=("green" if correct else "red"),
             fontsize=14,
             fontweight='bold',
-            pad=6,
-            backgroundcolor=(1,1,1,0.6)
         )
         for spine in ax.spines.values():
             spine.set_edgecolor("green" if correct else "red")
             spine.set_linewidth(3.0)
 
-    fig.suptitle("CIFAR-10 — predictions (green=correct, red=wrong)", fontsize=16)
-    fig.tight_layout(rect=[0, 0, 1, 0.97])
+    fig.suptitle("CIFAR-10 — predictions (green=correct, red=wrong)", fontsize=20)
+    fig.tight_layout()
 
     import os
     os.makedirs(os.path.dirname(save_path) or ".", exist_ok=True)
