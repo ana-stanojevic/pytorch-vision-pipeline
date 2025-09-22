@@ -1,7 +1,7 @@
 # pytorch-vision-pipeline  
 
 ![CI](https://github.com/<user>/pytorch-vision-pipeline/actions/workflows/python-ci.yml/badge.svg)
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Python](https://img.shields.io/badge/python-3.13-blue.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 

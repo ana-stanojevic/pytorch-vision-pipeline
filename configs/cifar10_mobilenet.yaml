@@ -3,7 +3,7 @@
 model: mobilenetv3_small
 dataset: cifar10
 data_dir: ./data
-epochs: 1
+epochs: 5
 batch_size: 128
 lr: 0.0005
 weight_decay: 0.05
