@@ -91,14 +91,13 @@ tensorboard --logdir outputs/logs
 
 ## 🧪 Tests  
 
-Run smoke tests:  
+Run all tests:  
 ```bash
 pytest -q
 ```  
-
-Run all tests (verbose):  
-```bash
-pytest -v
+Run only the integration test:
+```
+pytest -q tests/test_integration_fake_training.py
 ```
 
 ---

@@ -9,7 +9,7 @@ writer = SummaryWriter(log_dir="outputs/logs")
 def set_seed(seed=42):
     random.seed(seed)
     torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+    random.seed(0)
 
 def main():
     p = argparse.ArgumentParser(description="Modern Vision Pipeline (MPS-ready)")

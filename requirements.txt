@@ -1,6 +1,5 @@
 torch
 torchvision
-torchaudio
 timm
 tqdm
 onnx
