@@ -84,8 +84,7 @@ def train(config, writer):
         val_loader,
         device="cpu",
         save_path="outputs/viz/cifar10_pred_grid.png",
-        max_images=10,
-        writer=writer,
+        max_images=10
     )
 
     if onnx_out:

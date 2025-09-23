@@ -1,7 +1,6 @@
 import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-from torch.utils.tensorboard import SummaryWriter
 
 def cifar10_classes_from_dataset(dataset):
     return getattr(dataset, "classes", [str(i) for i in range(10)])
@@ -12,8 +11,7 @@ def save_cifar10_grid(
     val_loader,
     device: str = "cpu",
     save_path: str = "outputs/viz/cifar10_pred_grid.png",
-    max_images: int = 10,
-    writer: SummaryWriter = None
+    max_images: int = 10
 ):
 
     model.eval()
@@ -91,6 +89,3 @@ def save_cifar10_grid(
     fig.savefig(save_path, dpi=300, bbox_inches="tight")
     print(f"[Saved] {save_path}")
 
-    if writer is not None:
-        writer.add_figure("viz/cifar10_grid", fig)
-    plt.close(fig)
