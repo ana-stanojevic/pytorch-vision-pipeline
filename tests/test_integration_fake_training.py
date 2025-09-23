@@ -72,7 +72,7 @@ def test_overfit_one_batch(mobilenet_factory):
     train_loader, _ = _make_loaders(n_train=128, n_val=64, batch_size=32)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
     xb, yb = next(iter(train_loader))
     xb, yb = xb.to(device), yb.to(device)
