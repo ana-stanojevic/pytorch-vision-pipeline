@@ -1,7 +1,3 @@
-# tests/test_integration_fake_training.py
-import importlib
-import pathlib
-import sys
 import time
 import torch
 import torch.nn as nn
@@ -93,13 +89,11 @@ def test_overfit_one_batch(mobilenet_factory):
         loss.backward()
         optimizer.step()
 
-    # finalno merenje
     model.eval()
     with torch.no_grad():
         final_logits = model(xb)
         final_loss = criterion(final_logits, yb).item()
         final_acc = _accuracy(final_logits, yb)
 
-    # asertacije
     assert final_loss <= base_loss * 0.5, f"Loss did not decrease enough: {base_loss:.3f} -> {final_loss:.3f}"
     assert final_acc >= 0.90, f"Accuracy on one batch too low: {final_acc:.2%} (baseline {base_acc:.2%})"

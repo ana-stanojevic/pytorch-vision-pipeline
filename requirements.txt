@@ -1,7 +1,6 @@
 torch
 torchvision
 timm
-tqdm
 onnx
 onnxruntime
 numpy
@@ -9,7 +8,6 @@ pillow
 tensorboard
 pyyaml
 #dev
-black
 ruff
+mypy
 pytest
-ipykernel

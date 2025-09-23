@@ -10,8 +10,6 @@ import sys
 @pytest.fixture(autouse=True, scope="session")
 def _set_env():
     os.environ.setdefault("PYTHONHASHSEED", "0")
-    os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
-    os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
     yield
 
 @pytest.fixture(autouse=True, scope="session")
