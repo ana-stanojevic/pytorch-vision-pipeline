@@ -17,8 +17,10 @@ def _make_loaders(n_train=64, n_val=32, batch_size=16):
 
 def _epoch(model, loader, criterion, optimizer, train=True, device="cpu"):
     meter_loss, n = 0.0, 0
-    if train: model.train()
-    else:     model.eval()
+    if train: 
+        model.train()
+    else:
+        model.eval()
     for xb, yb in loader:
         xb, yb = xb.to(device), yb.to(device)
         with torch.set_grad_enabled(train):

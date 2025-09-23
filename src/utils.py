@@ -81,7 +81,8 @@ def benchmark_latency(model, loader, device: str, amp_dtype, warmup: int=10, mea
         try:
             x, _ = next(it)
         except StopIteration:
-            it = iter(loader); x, _ = next(it)
+            it = iter(loader)
+            x, _ = next(it)
         x = x.to(device)
         _ = model(x)
     # measure
@@ -89,7 +90,8 @@ def benchmark_latency(model, loader, device: str, amp_dtype, warmup: int=10, mea
         try:
             x, _ = next(it)
         except StopIteration:
-            it = iter(loader); x, _ = next(it)
+            it = iter(loader)
+            x, _ = next(it)
         x = x.to(device)
         t0 = time.perf_counter()
         with cast_ctx:
@@ -150,7 +152,8 @@ def benchmark_onnx(sess: ort.InferenceSession, input_name: str, loader, warmup=5
         try:
             imgs, _ = next(it)
         except StopIteration:
-            it = iter(loader); imgs, _ = next(it)
+            it = iter(loader)
+            imgs, _ = next(it)
         x = imgs.detach().cpu().numpy().astype(np.float32)
         _ = sess.run(None, {input_name: x})
 
@@ -160,7 +163,8 @@ def benchmark_onnx(sess: ort.InferenceSession, input_name: str, loader, warmup=5
         try:
             imgs, _ = next(it)
         except StopIteration:
-            it = iter(loader); imgs, _ = next(it)
+            it = iter(loader)
+            imgs, _ = next(it)
         x = imgs.detach().cpu().numpy().astype(np.float32)
         t0 = time.perf_counter()
         _ = sess.run(None, {input_name: x})

@@ -1,4 +1,5 @@
-import argparse, random
+import argparse
+import random
 import torch    
 from src.train import train
 from src.infer import infer
