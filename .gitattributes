@@ -1,6 +1,7 @@
 .github/        export-ignore
 .venv/          export-ignore
 .gitignore      export-ignore
+.gitattributes  export-ignore
 
 artifacts/      export-ignore
 .pytest_cache/  export-ignore
@@ -8,7 +9,7 @@ artifacts/      export-ignore
 __pycache__/    export-ignore
 outputs/        export-ignore
 
-*.pyc
-*.onnx
+*.pyc           export-ignore
+*.onnx          export-ignore
 
 
