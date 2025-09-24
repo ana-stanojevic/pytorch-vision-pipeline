@@ -9,5 +9,4 @@ tensorboard
 pyyaml
 #dev
 ruff
-mypy
 pytest
