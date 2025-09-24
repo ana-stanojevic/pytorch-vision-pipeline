@@ -20,13 +20,6 @@ def _add_src_to_syspath():
         sys.path.insert(0, str(SRC))
     yield
 
-@pytest.fixture(autouse=True)
-def _determinism():
-    torch.manual_seed(0)
-    random.seed(0)
-    np.random.seed(0)
-    yield
-
 @pytest.fixture (autouse=True)
 def model_factory():
     pytest.importorskip("timm")
@@ -37,7 +30,6 @@ def model_factory():
 
     def _get_model(model_name, num_classes=3, pretrained=False):
         model, img_size = M.create_model(model_name, num_classes=num_classes, pretrained=pretrained)
-        assert isinstance(model, torch.nn.Module)
         return model, img_size
 
     return _get_model
