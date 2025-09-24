@@ -28,16 +28,16 @@ def _determinism():
     yield
 
 @pytest.fixture (autouse=True)
-def mobilenet_factory():
+def model_factory():
     pytest.importorskip("timm")
     try:
         M = importlib.import_module("models")
     except ModuleNotFoundError:
         M = importlib.import_module("src.models")
 
-    def _get_mobilenet(num_classes=3, pretrained=False):
-        model, img_size = M.create_model("mobilenet", num_classes=num_classes, pretrained=pretrained)
+    def _get_model(model_name, num_classes=3, pretrained=False):
+        model, img_size = M.create_model(model_name, num_classes=num_classes, pretrained=pretrained)
         assert isinstance(model, torch.nn.Module)
         return model, img_size
 
-    return _get_mobilenet
+    return _get_model
