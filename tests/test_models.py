@@ -1,7 +1,6 @@
 import pathlib
 import sys
 import torch
-import torch.nn as nn
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
