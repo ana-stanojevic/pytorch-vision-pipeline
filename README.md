@@ -98,7 +98,7 @@ pytest -q
 ---
 
 ## ❓ Why this project  
-This repo is a **learning-friendly, reproducible demo** of a computer-vision pipeline—**data → model → training → evaluation → inference → CI-**built to be clean and modular. It also showcases how *lightweight, well-designed architectures* can run efficiently on modest hardware while still achieving solid performance, with the expected latency ↔ accuracy trade-offs highlighted.
+This repo is a **learning-friendly, reproducible demo** of a computer-vision pipeline— **data → model → training → evaluation → inference → CI-** built to be clean and modular. It also showcases how *lightweight, well-designed architectures* can run efficiently on modest hardware while still achieving solid performance, with the expected latency ↔ accuracy trade-offs highlighted.
 
 Use cases:  
 - 📚 Teaching / workshops (end-to-end workflow demo) 
