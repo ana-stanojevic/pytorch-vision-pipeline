@@ -28,26 +28,25 @@ pytorch-vision-pipeline/
 ├── src/
 │   └── models.py                  
 │   └── train.py          # training & evaluation loop
-│   └── infer.py          # inference script
-│   └── data.py          # data functions
+│   └── infer.py          # inference 
+│   └── data.py          # data loader
 │   └── utils.py          # helper functions
-│   └── viz.py          # vizualization functions
+│   └── viz.py          # vizualization 
 ├── tests/
-│   └── test_model.py     # unit tests for models
-├─ data/
+│   └── conftest.py     # test configuration
+│   └── test_models.py     # unit tests for models
 ├─ configs/
 │  └── cifar10_vit_tiny.yaml
 │  └── cifar10_mobilenet.yaml
-├─ outputs/
-│  └── visuals
-│  └── models 
-│  └── logs 
-│  └── viz
 ├── .github/workflows/
 │   └── python-ci.yml     # GitHub Actions CI pipeline
 ├── requirements.txt      # dependencies
-├── .gitignore
+├── .gitignore  
+├── .gitattributes      # excludes files/folders from release archives
 └── README.md
+Generated at runtime
+- outputs/           # eval metrics, plots, models ...
+- data/           # stores downloaded dataset
 ```
 ---
 
@@ -68,14 +67,14 @@ pip install -r requirements.txt
 
 3. **Train and inference models**  
 ```bash
-# ViT-Tiny (MPS, AMP, benchmark)
-python main.py --config configs/cifar10_vit_tiny.yaml
-
-# MobileNetV3-Small
+# MobileNetV3-Small (MPS, AMP, ligh CNN benchmark)
 python main.py --config configs/cifar10_mobilenet.yaml
+
+# ViT-Tiny (MPS, AMP, small transformer benchmark)
+python main.py --config configs/cifar10_vit_tiny.yaml
 ```
 
-4. **Run inference on the existing models**  
+4. **Run inference with the existing .onnx models**  
 ```bash
 python src/main.py --config configs/cifar10_vit_tiny.yaml --no_train 
 python main.py --config configs/cifar10_mobilenet.yaml --no-train
@@ -83,7 +82,7 @@ python main.py --config configs/cifar10_mobilenet.yaml --no-train
 
 5. **Training & latency at a glance (PyTorch MPS vs ONNX CPU)**
 ```bash
- #Launch TensorBoard to view loss, val accuracy, and latency comparisons:
+ # Launch TensorBoard to view loss, val accuracy, and latency comparisons:
 tensorboard --logdir outputs/logs
 ```
 
@@ -95,43 +94,33 @@ Run all tests:
 ```bash
 pytest -q
 ```  
-Run only the integration test:
-```
-pytest -q tests/test_integration_fake_training.py
-```
 
 ---
 
 ## ❓ Why this project  
-This repository was built as a **learning-friendly, reproducible template** for computer vision projects.  
-The idea is to show how to go from *data → model → training → evaluation → inference → CI* in a clean, modular way.  
+This repo is a **learning-friendly, reproducible demo** of a computer-vision pipeline—**data → model → training → evaluation → inference → CI-**built to be clean and modular. It also showcases how *lightweight, well-designed architectures* can run efficiently on modest hardware while still achieving solid performance, with the expected latency ↔ accuracy trade-offs highlighted.
 
 Use cases:  
-- 🚀 Quick start for newcomers to PyTorch vision projects  
-- 📚 Teaching / workshops (end-to-end workflow demo)  
+- 📚 Teaching / workshops (end-to-end workflow demo) 
+- 🚀 Rapid prototyping under constraints (latency/memory/power).  
 - 🧪 Baseline reference for experimenting with CIFAR-10  
 - ⚙️ Template for scaling to more complex datasets or architectures  
-
 
 ---
 
 
 ## ⚙️ Tech stack  
-- Python 3.11  
-- PyTorch & TorchVision  
-- PyTest  
-- GitHub Actions  
+**Runtime**
+- Python 3.13
+- torch · torchvision · timm
+- onnx · onnxruntime
+- numpy · pillow · pyyaml
+- tensorboard
 
----
-
-## 📋 Requirements  
-
-```
-torch==2.2.2
-torchvision==0.17.2
-tqdm==4.66.4
-pytest==8.3.2
-```
+**Dev**
+- pytest
+- ruff
+- GitHub Actions (CI)
 
 ---
 
