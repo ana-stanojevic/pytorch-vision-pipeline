@@ -11,3 +11,7 @@ matplotlib
 #dev
 ruff
 pytest
+#api
+fastapi
+uvicorn
+python-multipart

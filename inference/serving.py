@@ -10,18 +10,23 @@ def load_onnx_session(onnx_path: str):
     sess, input_name, (_, C, H, _), output_name = _read_model_io(onnx_path)
     if C != 3: 
         raise ValueError("Expected RGB input")
-    return sess, input_name, output_name, H
+    return {
+        "session": sess,
+        "input_name": input_name,
+        "output_name": output_name,
+        "image_size": H
+    }
 
 CIFAR10_LABELS = [
     "airplane", "automobile", "bird", "cat", "deer",
     "dog", "frog", "horse", "ship", "truck"
 ]
 
-def predict_image(sess, input_name, output_name, img, img_size):
-    _, val_tf = build_transforms(img_size)
+def predict_image(runtime, img):
+    _, val_tf = build_transforms(runtime['image_size'])
     x = val_tf(img)            # shape: (C, H, W)
     x = x.unsqueeze(0).numpy() # shape: (1, C, H, W)
-    outputs = sess.run([output_name], {input_name: x})
+    outputs = runtime['session'].run([runtime['output_name']], {runtime['input_name']: x})
     logits = outputs[0][0]     
 
     probs_t = F.softmax(torch.from_numpy(logits).float(), dim=-1)
@@ -29,7 +34,6 @@ def predict_image(sess, input_name, output_name, img, img_size):
     idx = int(np.argmax(probs))
 
     return {
-        "class_id": idx,
         "class_name": CIFAR10_LABELS[idx], 
         "confidence": float(probs[idx]),
         "tag": business_tag(CIFAR10_LABELS[idx])
@@ -43,10 +47,10 @@ if __name__=='__main__':
     parser.add_argument("--image", required=True, help="Path to an input image (jpg/png)")
     args = parser.parse_args()
 
-    sess, input_name, output_name, image_size = load_onnx_session(args.onnx)
+    runtime = load_onnx_session(args.onnx)
     img = Image.open(args.image).convert("RGB")
 
-    result = predict_image(sess, input_name, output_name, img, image_size)
+    result = predict_image(runtime, img)
     print(result)
 
 
