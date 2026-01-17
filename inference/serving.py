@@ -8,7 +8,8 @@ from .tags import business_tag
 
 def load_onnx_session(onnx_path: str):
     sess, input_name, (_, C, H, _), output_name = _read_model_io(onnx_path)
-    if C != 3: raise ValueError("Expected RGB input")
+    if C != 3: 
+        raise ValueError("Expected RGB input")
     return sess, input_name, output_name, H
 
 CIFAR10_LABELS = [
