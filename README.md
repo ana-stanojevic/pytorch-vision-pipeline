@@ -54,7 +54,7 @@ Generated at runtime
 
 1. **Clone repo**  
 ```bash
-git clone https://github.com/<user>/pytorch-vision-pipeline.git  
+git clone https://github.com/ana-stanojevic/pytorch-vision-pipeline.git  
 cd pytorch-vision-pipeline  
 ```
 
@@ -76,7 +76,7 @@ python main.py --config configs/cifar10_vit_tiny.yaml
 
 4. **Run inference with the existing .onnx models**  
 ```bash
-python src/main.py --config configs/cifar10_vit_tiny.yaml --no_train 
+python main.py --config configs/cifar10_vit_tiny.yaml --no-train 
 python main.py --config configs/cifar10_mobilenet.yaml --no-train
 ```
 

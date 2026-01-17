@@ -37,6 +37,6 @@ def infer(config, writer):
     if do_bench:
         bench = benchmark_onnx(sess, input_name, val_loader, warmup=5, measure=20)
         if bench["latency_ms"] is not None:
-            print(f"[ONNX Bench] latency={bench['latency_ms']:.2f} ms | img/s={bench['images_per_s']:.2f} @batch={bench['batch']}")
+            print(f"[ONNX Bench] latency={bench['latency_s']:.2f} ms | img/s={bench['images_per_s']:.2f} @batch={bench['batch']}")
             writer.add_scalar(f"{model_name}-onnx-latency/ms", bench["latency_ms"], 0)
             writer.add_scalar(f"{model_name}-onnx-throughput/img_s", bench["images_per_s"], 0)
