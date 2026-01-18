@@ -36,7 +36,8 @@ def predict_image(runtime, img):
     return {
         "class_name": CIFAR10_LABELS[idx], 
         "confidence": float(probs[idx]),
-        "tag": business_tag(CIFAR10_LABELS[idx])
+        "tag": business_tag(CIFAR10_LABELS[idx]),
+        "source": "AI model"
     }
 
 if __name__=='__main__':

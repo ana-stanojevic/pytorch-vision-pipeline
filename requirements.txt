@@ -11,6 +11,9 @@ matplotlib
 #dev
 ruff
 pytest
+#db
+psycopg2
+sqlalchemy
 #api
 fastapi
 uvicorn
