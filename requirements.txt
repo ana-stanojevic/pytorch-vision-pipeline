@@ -12,9 +12,10 @@ matplotlib
 ruff
 pytest
 #db
-psycopg2
+psycopg2-binary
 sqlalchemy
 #api
 fastapi
 uvicorn
+gunicorn
 python-multipart
