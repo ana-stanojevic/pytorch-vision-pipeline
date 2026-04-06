@@ -7,10 +7,10 @@
 
 End-to-end vision system from training to ONNX inference and API serving.
 
-This repository focuses on a single constraint:  
-**training and serving must stay aligned.**
+This repository focuses on a single constraint: **training and serving must stay aligned.**
 
 Instead of separating experimentation and deployment, the system keeps a single path:
+
 PyTorch → ONNX → ONNX Runtime → FastAPI
 
 ---
