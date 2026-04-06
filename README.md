@@ -11,7 +11,7 @@ This repository focuses on a single constraint: **training and serving must stay
 
 Instead of separating experimentation and deployment, the system keeps a single path:
 
-PyTorch → ONNX → ONNX Runtime → FastAPI
+**PyTorch → ONNX → ONNX Runtime → FastAPI**
 
 ---
 
