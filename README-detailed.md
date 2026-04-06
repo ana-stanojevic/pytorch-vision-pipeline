@@ -101,14 +101,19 @@ pytorch-vision-pipeline/
 
 PyTorch training
     ↓
+	
 evaluation + logging
     ↓
+	
 export to ONNX
     ↓
+	
 ONNX Runtime inference
     ↓
+	
 FastAPI /predict endpoint
     ↓
+	
 prediction caching in DB
 
 ---
