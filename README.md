@@ -57,14 +57,19 @@ Everything downstream — evaluation, API, caching — is built on top of ONNX.
 
 PyTorch training
 ↓
+
 evaluation (same preprocessing)
 ↓
+
 export to ONNX
 ↓
+
 ONNX Runtime inference
 ↓
+
 FastAPI /predict endpoint
 ↓
+
 prediction caching (DB)
 
 ---
@@ -115,10 +120,10 @@ or from cache:
 Not model performance.
 
 But system design:
-	•	how to keep training and inference consistent
-	•	how to structure export as a first-class step
-	•	how to build a minimal serving layer on top
-	•	how to avoid silent drift between environments
+- how to keep training and inference consistent
+- how to structure export as a first-class step
+- how to build a minimal serving layer on top
+- how to avoid silent drift between environments
 
 ---
 ## Tech stack
